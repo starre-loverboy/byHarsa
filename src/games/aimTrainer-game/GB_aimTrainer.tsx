@@ -168,7 +168,7 @@ function AimTrainer() {
         if (gameState === "active") {
             setTimeout(() => {
                 gameBoxRef.current?.scrollIntoView({
-                block: "center",
+                block: "end",
                 behavior: "smooth"
             })  
             }, 100)
