@@ -166,10 +166,12 @@ function AimTrainer() {
 
     useEffect(() => {
         if (gameState === "active") {
-            gameBoxRef.current?.scrollIntoView({
-                block: "end",
+            setTimeout(() => {
+                gameBoxRef.current?.scrollIntoView({
+                block: "center",
                 behavior: "smooth"
-            })
+            })  
+            }, 100)
         }
         if (gameState === "idle") {
             mainTitleRef.current?.scrollIntoView({
