@@ -167,7 +167,7 @@ function AimTrainer() {
     useEffect(() => {
         if (gameState === "active") {
             gameBoxRef.current?.scrollIntoView({
-                block: "start",
+                block: "end",
                 behavior: "smooth"
             })
         }
