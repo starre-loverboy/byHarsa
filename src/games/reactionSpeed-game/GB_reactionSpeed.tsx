@@ -29,6 +29,7 @@ function GB_reactionSpeed() {
   >([]);
   const [orderField, setOrderField] = useState<string>("unsorted");
   const [isDescending, setIsDescending] = useState<boolean>(false);
+  const [isReset, setIsReset] = useState<boolean>(false)
 
   const rounds: number[] = [];
 
@@ -39,20 +40,23 @@ function GB_reactionSpeed() {
     rounds.push(i);
   }
 
-  const resetEverything = () => {
-    setIsDone(false);
-    setIsActive(false);
-    setCurrentRound(0);
-    setGreenTotalState(0);
-    setRedTotalState(0);
-    setReactionTimeList([]);
-    setIsBlue(false);
-    setIsRed(false);
-    setIsGreen(false);
-    setIsGrey(false);
-  };
+  useEffect(() => {
+    if (isReset) {
+      setIsDone(false);
+      setIsActive(false);
+      setCurrentRound(0);
+      setGreenTotalState(0);
+      setRedTotalState(0);
+      setReactionTimeList([]);
+      setIsBlue(false);
+      setIsRed(false);
+      setIsGreen(false);
+      setIsGrey(false);
+    }
+  }, [isReset])
+
   const startGame = () => {
-    resetEverything();
+    setIsReset(false)
     if (desiredNumber < 1) {
       setIsError(true);
       return;
@@ -195,6 +199,21 @@ function GB_reactionSpeed() {
 
   if (!isDescending) sortedList.reverse();
 
+  useEffect(() => {
+    if (isActive && !isError) {
+      gameBoxRef.current?.scrollIntoView({
+        block: "center",
+        behavior: "smooth"
+      })
+    }
+    if (isReset) {
+      mainTitleRef.current?.scrollIntoView({
+        block: "center",
+        behavior: "smooth"
+      })
+    }
+  }, [isActive, isError, isReset])
+
   return (
     <div className="game-board">
       <h1 className="mainTitle-h1" ref={mainTitleRef}>Reaction Speed Test</h1>
@@ -206,23 +225,12 @@ function GB_reactionSpeed() {
           onChange={(e) => setDesiredNumber(Math.floor(Number(e.target.value)))}
           min="1"
         />
-        <button onClick={() => {
-          startGame()
-          gameBoxRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-          })
-        }} className="start-button">Start Game</button>
+        <button onClick={startGame} className="start-button">Start Game</button>
         {isError && <p>Input a number above 0!</p>}
       </div>
-      <div className="reaction-ground" ref={gameBoxRef}>
-        {!isActive && (
-          <div className="reaction-placeholder">
-            <h2>--The game will play here!--</h2>
-          </div>
-        )}
-        {isActive && !isError && (
-          <>
+      {isActive && !isError && (
+        <>
+          <div className="reaction-ground" ref={gameBoxRef}>
             {rounds.map(
               (num) =>
                 num === currentRound && (
@@ -244,24 +252,16 @@ function GB_reactionSpeed() {
                   </div>
                 ),
             )}
-          </>
-        )}
-      </div>
-      {isActive && (
-        <div className="sec-control-panel">
-          <button
-            className="refresh-board-button reset"
-            onClick={() => {
-              resetEverything()
-              mainTitleRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "center"
-              })
-            }}
-          >
-            Reset Game
-          </button>
-        </div>
+          </div>
+          <div className="sec-control-panel">
+            <button
+              className="refresh-board-button reset"
+              onClick={() => setIsReset(true)}
+            >
+              Reset Game
+            </button>
+          </div>
+        </>
       )}
       {isDone && (
         <div className="finished-section">
