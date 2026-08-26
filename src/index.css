@@ -843,6 +843,10 @@ select option:checked {
   padding: 1rem;
 }
 
+
+/* kraepelin here bro */
+
+
 /* homepage here bro */
 
 nav {
@@ -977,6 +981,10 @@ footer {
 }
 footer p {
   font-size: 2rem;
+}
+
+.h2-navbar:hover {
+  cursor: pointer;
 }
 
 @media (width < 1024px) {
